@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  theatricalReleaseDate: 2019-03-22 14:20:50
+  duration: 1
+
+two:
+  theatricalReleaseDate: 2019-03-22 14:20:50
+  duration: 1

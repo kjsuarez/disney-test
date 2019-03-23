@@ -9,6 +9,7 @@ gem 'rails', '~> 5.2.2'
 
 
 gem "sqlite3", '~> 1.3.6'
+gem 'rb-readline'
 
 
 # Use Puma as the app server

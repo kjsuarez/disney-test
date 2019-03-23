@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
   def hello
-    render json: {json: 'rails get response'}
+    features = Feature.all
+    render json: {features: features}
   end
 end
