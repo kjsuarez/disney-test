@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_23_003023) do
+ActiveRecord::Schema.define(version: 2019_03_23_183548) do
 
   create_table "bonus_features", force: :cascade do |t|
     t.string "name"
@@ -39,6 +39,8 @@ ActiveRecord::Schema.define(version: 2019_03_23_003023) do
     t.integer "duration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name", null: false
+    t.string "description", null: false
   end
 
   create_table "seasons", force: :cascade do |t|
