@@ -8,12 +8,14 @@ class FeaturesController < ActionController::API
   end
 
   rescue_from(ArgumentError) do |parameter_missing_exception|
-    render json: {message: "bad date syntax", error: parameter_missing_exception, status: 402}
+    render json: {message: "bad date syntax", error: parameter_missing_exception, status: 402}, status: 402
   end
 
   rescue_from(ActiveRecord::RecordNotFound) do |record_missing_exception|
     render json: {message: "No feature with that ID found", error: record_missing_exception, status: 404}, status: 404
   end
+
+  before_action :check_clean_params, only: [:addFeature]
 
   def addFeature
     @feature = Feature.new(feature_params)
@@ -46,6 +48,17 @@ class FeaturesController < ActionController::API
       return e
     rescue ArgumentError => e
       return e # render json: {error: "insufficient metadata to create a feature"}
+    end
+  end
+
+  def check_clean_params
+    unless params[:feature] &&
+          params[:feature][:name].present? &&
+          params[:feature][:description].present? &&
+          params[:feature][:theatricalReleaseDate].present? &&
+          params[:feature][:duration].present?
+
+      render json: {message: "You're missing required parameters", status: 400}, status: 400
     end
   end
 

@@ -28,7 +28,7 @@ describe FeaturesController do
       expect(output[:error]).to eql "Couldn't find Feature with 'id'=1000"
     end
 
-    it "passes with a legal id" do
+    it "failed gracefully with a bad id" do
       expect(response.status).to eq(404)
     end
   end
@@ -38,36 +38,43 @@ describe FeaturesController do
     context "when is successfully created" do
       before(:each) do
         @feature_attributes = FactoryGirl.attributes_for :feature
-        post :addFeature, { feature: @feature_attributes }, format: :json
+        post :addFeature, params: { feature: @feature_attributes }, format: :json
       end
 
-      # it "renders the json representation for the feature record just created" do
-      #   user_response = JSON.parse(response.body, symbolize_names: true)
-      #   expect(user_response[:email]).to eql @user_attributes[:email]
-      # end
+      it "renders the json representation for the feature record just created" do
+        feature_response = JSON.parse(response.body, symbolize_names: true)
+        expect(feature_response[:response]).to eql "feature saved!"
+      end
 
-      it { should respond_with 201 }
+      it "passes with a legal id" do
+        expect(response.status).to eq(200)
+      end
     end
 
-    # context "when is not created" do
-    #   before(:each) do
-    #     #notice I'm not including the email
-    #     @invalid_user_attributes = { password: "12345678",
-    #                                  password_confirmation: "12345678" }
-    #     post :create, { user: @invalid_user_attributes }, format: :json
-    #   end
-    #
-    #   it "renders an errors json" do
-    #     user_response = JSON.parse(response.body, symbolize_names: true)
-    #     expect(user_response).to have_key(:errors)
-    #   end
-    #
-    #   it "renders the json errors on why the user could not be created" do
-    #     user_response = JSON.parse(response.body, symbolize_names: true)
-    #     expect(user_response[:errors][:email]).to include "can't be blank"
-    #   end
-    #
-    #   it { should respond_with 422 }
-    # end
+    context "fails when" do
+      before(:each) do
+        #notice I'm not including the email
+        @invalid_user_attributes = { "name": "moop",
+           "description": "floop",
+            "theatricalReleaseDate": "11/27/2013",
+             "duration": 30000 }
+
+      end
+
+      it "needs a legal date string" do
+        post :addFeature, params: { feature: @invalid_user_attributes }, format: :json
+
+        feature_response = JSON.parse(response.body, symbolize_names: true)
+        expect(feature_response).to have_key(:error)
+      end
+
+      it "needs all params to be present" do
+        @invalid_user_attributes[:name] = ""
+        post :addFeature, params: { feature: @invalid_user_attributes }, format: :json
+        feature_response = JSON.parse(response.body, symbolize_names: true)
+        expect(feature_response[:status]).to eql 400
+      end
+
+    end
   end
 end

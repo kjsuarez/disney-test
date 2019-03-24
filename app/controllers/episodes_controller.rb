@@ -23,7 +23,7 @@ class EpisodesController < ActionController::API
   end
 
   def getEpisode
-    @episode = TvShow.find(params[:episode_id])    
+    @episode = TvShow.find(params[:episode_id])
     render json: { response: @episode }
   end
 
@@ -47,12 +47,12 @@ class EpisodesController < ActionController::API
 
   def check_clean_params
     unless params[:episode] &&
-          params[:episode][:name] &&
-          params[:episode][:description] &&
-          params[:episode][:releaseDate] &&
-          params[:episode][:duration]
+          params[:episode][:name].present? &&
+          params[:episode][:description].present? &&
+          params[:episode][:releaseDate].present? &&
+          params[:episode][:duration].present?
 
-      render json: {response: "You're missing required parameters"}
+      render json: {message: "You're missing required parameters", status: 400}, status: 400
     end
   end
 
