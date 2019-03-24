@@ -11,6 +11,10 @@ class FeaturesController < ActionController::API
     render json: {message: "bad date syntax", error: parameter_missing_exception, status: 402}
   end
 
+  rescue_from(ActiveRecord::RecordNotFound) do |record_missing_exception|
+    render json: {message: "No feature with that ID found", error: record_missing_exception, status: 404}, status: 404
+  end
+
   def addFeature
     @feature = Feature.new(feature_params)
     if @feature.save
