@@ -47,13 +47,13 @@ ActiveRecord::Schema.define(version: 2019_03_23_183548) do
     t.string "name"
     t.string "description"
     t.datetime "releaseDate"
-    t.integer "tv_series_id"
+    t.integer "tv_show_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tv_series_id"], name: "index_seasons_on_tv_series_id"
+    t.index ["tv_show_id"], name: "index_seasons_on_tv_show_id"
   end
 
-  create_table "tv_series", force: :cascade do |t|
+  create_table "tv_shows", force: :cascade do |t|
     t.string "name"
     t.string "description"
     t.datetime "releaseDate"

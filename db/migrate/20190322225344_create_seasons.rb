@@ -4,7 +4,7 @@ class CreateSeasons < ActiveRecord::Migration[5.2]
       t.string :name
       t.string :description
       t.datetime :releaseDate
-      t.belongs_to :tv_series
+      t.belongs_to :tv_show
       t.timestamps
     end
   end

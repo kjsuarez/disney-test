@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TvSeriesTest < ActiveSupport::TestCase
+class TvShowTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

@@ -7,6 +7,10 @@ class FeaturesController < ActionController::API
     render json: {errors: [error], status: :unprocessable_entity}
   end
 
+  rescue_from(ArgumentError) do |parameter_missing_exception|
+    render json: {message: "bad date syntax", error: parameter_missing_exception, status: 402}
+  end
+
   def addFeature
     @feature = Feature.new(feature_params)
     if @feature.save
@@ -17,15 +21,6 @@ class FeaturesController < ActionController::API
   end
 
   private
-
-  def paramsClean()
-    # begin
-    #   Date.parse(params[:feature][:theatricalReleaseDate])
-    # rescue ArgumentError
-    #   return false
-    # end
-    return true
-  end
 
   def feature_params
     begin
