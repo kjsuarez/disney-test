@@ -15,6 +15,11 @@ class BonusFeaturesController < ActionController::API
     render json: {message: "No feature with that ID found", error: record_missing_exception, status: 404}
   end
 
+  def allBonuses
+    @bonuses = BonusFeature.all
+    render json: {response: @bonuses}
+  end
+
   def addBonus
     @feature = Feature.find(params[:feature_id])
     @bonus = @feature.bonus_features.new(bonus_params)

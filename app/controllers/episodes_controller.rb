@@ -17,6 +17,16 @@ class EpisodesController < ActionController::API
 
   before_action :check_clean_params, only: [:addEpisode]
 
+  def allEpisodes
+    @episodes = Episode.all
+    render json: { response: @episodes }
+  end
+
+  def getEpisode
+    @episode = TvShow.find(params[:episode_id])    
+    render json: { response: @episode }
+  end
+
   def addEpisode
     @season = Season.find(params[:season_id])
     @episode = @season.episodes.new(episode_params)
@@ -41,9 +51,6 @@ class EpisodesController < ActionController::API
           params[:episode][:description] &&
           params[:episode][:releaseDate] &&
           params[:episode][:duration]
-
-      puts "***XXX***"    
-      puts  params[:episode]
 
       render json: {response: "You're missing required parameters"}
     end

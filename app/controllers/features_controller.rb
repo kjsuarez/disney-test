@@ -20,6 +20,17 @@ class FeaturesController < ActionController::API
     end
   end
 
+  def allFeatures
+    @features = Feature.all
+    render json: { response: @features }
+  end
+
+  def getFeature
+    @feature = Feature.find(params[:feature_id])
+    @bonuses = @feature.bonus_features
+    render json: { response: {feature: @feature, bonuses: @bonuses} }
+  end
+
   private
 
   def feature_params

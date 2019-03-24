@@ -15,6 +15,17 @@ class SeasonsController < ActionController::API
     render json: {message: "No TV Series with that ID found", error: record_missing_exception, status: 404}
   end
 
+  def allSeasons
+    @seasons = Season.all
+    render json: { response: @seasons }
+  end
+
+  def getSeason
+    @season = Season.find(params[:season_id])
+    @episodes = @season.episodes
+    render json: { response: {season: @season, episodes: @episodes, } }
+  end
+
   before_action :check_clean_params, only: [:addSeason]
 
   def addSeason

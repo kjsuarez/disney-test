@@ -11,6 +11,17 @@ class TvShowsController < ActionController::API
     render json: {message: "bad date syntax", error: parameter_missing_exception, status: 402}
   end
 
+  def allShows
+    @series = TvShow.all
+    render json: { response: @series }
+  end
+
+  def getShow
+    @series = TvShow.find(params[:series_id])
+    @seasons = populateSeasons(@series.seasons)
+    render json: { response: {series: @series, seasons: @seasons, } }
+  end
+
   def addShow
     @series = TvShow.new(series_params)
     if @series.save
@@ -23,7 +34,7 @@ class TvShowsController < ActionController::API
   private
 
   def series_params
-    begin      
+    begin
       Date.parse(params[:series][:releaseDate])
       params.require(:series).require([:name, :description, :releaseDate])
       params.require(:series).permit(:name, :description, :releaseDate)
@@ -34,5 +45,15 @@ class TvShowsController < ActionController::API
     end
   end
 
+  def populateSeasons(seasons)
+    populated = []
+    seasons.each { |season|
+      @episodes = season.episodes
+      populated_season = season.as_json
+      populated_season[:episodes] = @episodes
+      populated << populated_season
+    }
+    return populated
+  end
 
 end
