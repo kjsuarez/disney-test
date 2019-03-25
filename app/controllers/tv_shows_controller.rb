@@ -11,6 +11,12 @@ class TvShowsController < ActionController::API
     render json: {message: "bad date syntax", error: parameter_missing_exception, status: 402}
   end
 
+  rescue_from(ActiveRecord::RecordNotFound) do |record_missing_exception|
+    render json: {message: "No feature with that ID found", error: record_missing_exception, status: 404}, status: 404
+  end
+
+  before_action :check_clean_params, only: [:addShow, :updateShow]
+
   def allShows
     @series = TvShow.all
     render json: { response: @series }
@@ -29,6 +35,21 @@ class TvShowsController < ActionController::API
     else
       render json: {response: "TV Series failed to save"}
     end
+  end
+
+  def deleteShow
+    @series = TvShow.find(params[:series_id])
+    @series.destroy!
+    render json: { response: "TV Series successfully deleted" }
+  end
+
+  def updateShow
+    @series = TvShow.find(params[:series_id])
+    if @series.update_attributes(series_params)
+      render json: { response: "TV Series successfully updated" }
+		else
+      render json: { response: "Failed to update TV Series" }
+		end
   end
 
   private
@@ -54,6 +75,16 @@ class TvShowsController < ActionController::API
       populated << populated_season
     }
     return populated
+  end
+
+  def check_clean_params
+    unless params[:series] &&
+          params[:series][:name].present? &&
+          params[:series][:description].present? &&
+          params[:series][:releaseDate].present?
+
+      render json: {message: "You're missing required parameters", status: 400}, status: 400
+    end
   end
 
 end

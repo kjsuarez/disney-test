@@ -33,7 +33,7 @@ describe FeaturesController do
     end
   end
 
-  describe "POST #create" do
+  describe "POST #addFeature" do
 
     context "when is successfully created" do
       before(:each) do
@@ -74,6 +74,25 @@ describe FeaturesController do
         expect(feature_response[:status]).to eql 400
       end
 
+    end
+  end
+
+  describe "PUT #updateBonus" do
+    context "when is successfully created" do
+      before(:each) do
+        @feature = FactoryGirl.create :feature_with_bonus
+        @feature_attributes = FactoryGirl.attributes_for :feature
+        put :updateFeature, params: { feature: @feature_attributes, feature_id: @feature.id }, format: :json
+      end
+
+      it "succeeds when" do
+        feature_response = JSON.parse(response.body, symbolize_names: true)
+        expect(feature_response[:response]).to eql "Feature successfully updated"
+      end
+
+      it "passes with a legal id" do
+        expect(response.status).to eq(200)
+      end
     end
   end
 end
