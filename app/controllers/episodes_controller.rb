@@ -8,14 +8,14 @@ class EpisodesController < ActionController::API
   end
 
   rescue_from(ArgumentError) do |parameter_missing_exception|
-    render json: {message: "bad date syntax", error: parameter_missing_exception, status: 402}
+    render json: {message: "bad date syntax", error: parameter_missing_exception, status: 402}, status: 402
   end
 
   rescue_from(ActiveRecord::RecordNotFound) do |record_missing_exception|
-    render json: {message: "No TV Series with that ID found", error: record_missing_exception, status: 404}
+    render json: {message: "No TV Series with that ID found", error: record_missing_exception, status: 404}, status: 404
   end
 
-  before_action :check_clean_params, only: [:addEpisode]
+  before_action :check_clean_params, only: [:addEpisode, :updateEpisode]
 
   def allEpisodes
     @episodes = Episode.all
@@ -23,8 +23,10 @@ class EpisodesController < ActionController::API
   end
 
   def getEpisode
-    @episode = TvShow.find(params[:episode_id])
-    render json: { response: @episode }
+    @episode = Episode.find(params[:episode_id])
+    @season = @episode.season
+    @series = @season.tv_show
+    render json: { response: {episode: @episode, season: @season, series: @series} }
   end
 
   def addEpisode
@@ -35,6 +37,21 @@ class EpisodesController < ActionController::API
     else
       render json: {response: "Episode failed to save"}
     end
+  end
+
+  def deleteEpisode
+    @episode = Episode.find(params[:episode_id])
+    @episode.destroy!
+    render json: { response: "Episode successfully deleted" }
+  end
+
+  def updateEpisode
+    @episode = Episode.find(params[:episode_id])
+    if @episode.update_attributes(episode_params)
+      render json: { response: "Episode successfully updated" }
+		else
+      render json: { response: "Failed to update Episode" }
+		end
   end
 
   private

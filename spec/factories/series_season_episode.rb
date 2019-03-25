@@ -26,6 +26,7 @@ FactoryGirl.define do
 
   factory :episode do
     name "...In Translation"
+    description "gosh"
     releaseDate "2004/09/22"
     duration "42"
 

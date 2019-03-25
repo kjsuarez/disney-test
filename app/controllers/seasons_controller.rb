@@ -12,8 +12,10 @@ class SeasonsController < ActionController::API
   end
 
   rescue_from(ActiveRecord::RecordNotFound) do |record_missing_exception|
-    render json: {message: "No TV Series with that ID found", error: record_missing_exception, status: 404}
+    render json: {message: "No TV Series with that ID found", error: record_missing_exception, status: 404}, status: 404
   end
+
+  before_action :check_clean_params, only: [:addSeason, :updateSeason]
 
   def allSeasons
     @seasons = Season.all
@@ -38,6 +40,21 @@ class SeasonsController < ActionController::API
     end
   end
 
+  def deleteSeason
+    @season = Season.find(params[:season_id])
+    @season.destroy!
+    render json: { response: "Feature successfully deleted" }
+  end
+
+  def updateSeason
+    @season = Season.find(params[:season_id])
+    if @season.update_attributes(season_params)
+      render json: { response: "Season successfully updated" }
+		else
+      render json: { response: "Failed to update Season" }
+		end
+  end
+
   private
 
   def season_params
@@ -52,7 +69,7 @@ class SeasonsController < ActionController::API
           params[:season][:description] &&
           params[:season][:releaseDate]
 
-      render json: {response: "You're missing required parameters"}
+      render json: {response: "You're missing required parameters", status: 400}, status: 400
     end
   end
 

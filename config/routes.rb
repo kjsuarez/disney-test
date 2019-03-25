@@ -24,7 +24,11 @@ Rails.application.routes.draw do
   get 'seasons' => 'seasons#allSeasons'
   get 'season/:season_id' => 'seasons#getSeason'
   post 'season/:season_id/episode/new' => 'episodes#addEpisode'
+  delete 'season/:season_id' => 'seasons#deleteSeason'
+  put 'season/:season_id' => 'seasons#updateSeason'
 
   get 'episodes' => 'episodes#allEpisodes'
   get 'episode/:episode_id' => 'episodes#getEpisode'
+  delete 'season/:season_id' => 'seasons#deleteSeason'
+  put 'episode/:episode_id' => 'episodes#updateEpisode'
 end
