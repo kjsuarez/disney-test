@@ -15,7 +15,7 @@ class FeaturesController < ActionController::API
     render json: {message: "No feature with that ID found", error: record_missing_exception, status: 404}, status: 404
   end
 
-  before_action :check_clean_params, only: [:addFeature]
+  before_action :check_clean_params, only: [:addFeature, :updateFeature]
 
   def addFeature
     @feature = Feature.new(feature_params)
@@ -35,6 +35,21 @@ class FeaturesController < ActionController::API
     @feature = Feature.find(params[:feature_id])
     @bonuses = @feature.bonus_features
     render json: { response: {feature: @feature, bonuses: @bonuses} }
+  end
+
+  def deleteFeature
+    @feature = Feature.find(params[:feature_id])
+    @feature.destroy!
+    render json: { response: "Feature successfully deleted" }
+  end
+
+  def updateFeature
+    @feature = Feature.find(params[:feature_id])
+    if @feature.update_attributes(feature_params)
+      render json: { response: "Feature successfully updated" }
+		else
+      render json: { response: "Failed to update Feature" }
+		end
   end
 
   private
@@ -61,6 +76,4 @@ class FeaturesController < ActionController::API
       render json: {message: "You're missing required parameters", status: 400}, status: 400
     end
   end
-
-
 end

@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   get 'feature/:feature_id' => 'features#getFeature'
   get 'features' => 'features#allFeatures'
   post 'feature/new' => 'features#addFeature'
+  delete 'feature/:feature_id' => 'features#deleteFeature'
+  put 'feature/:feature_id' => 'features#updateFeature'
 
   get 'bonuses' => 'bonus_features#allBonuses'
   post 'feature/:feature_id/bonus/new' => 'bonus_features#addBonus'

@@ -53,7 +53,6 @@ describe FeaturesController do
 
     context "fails when" do
       before(:each) do
-        #notice I'm not including the email
         @invalid_user_attributes = { "name": "moop",
            "description": "floop",
             "theatricalReleaseDate": "11/27/2013",
